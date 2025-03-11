@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+   
+    <link rel="stylesheet" type="text/css" href="slide navbar style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+
+    {% block css %}{% endblock %}
+</head>
+<body>
+    <header>
+      <!-- ========== HEADER ========== -->
+<header class="flex flex-wrap lg:justify-start lg:flex-nowrap z-50 w-full py-7">
+  
+</header>
+<!-- ========== END HEADER ========== -->
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+
+    </footer>
+
+    {% block js %}{% endblock %}
+    
+</body>
+</html>

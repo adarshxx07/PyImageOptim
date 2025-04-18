@@ -1,11 +1,22 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file  # Add this import for file downloads
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import bcrypt
+from PIL import Image  # Add this import for image processing
+import os
+import io
 
 app = Flask(__name__)
 app.secret_key = 'supersecretmre'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+
+UPLOAD_FOLDER = 'uploads'
+CONVERTED_FOLDER = 'converted'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['CONVERTED_FOLDER'] = CONVERTED_FOLDER
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(CONVERTED_FOLDER, exist_ok=True)
 
 db = SQLAlchemy(app)
 
@@ -67,6 +78,36 @@ def login():
         else:
             flash('Login failed', 'danger')
     return render_template('login.html')
+
+@app.route('/image-converter', methods=['GET', 'POST'])
+def image_converter():
+    if request.method == 'POST':
+        # Handle file uploads
+        if 'images' in request.files:
+            files = request.files.getlist('images')
+            converted_files = []
+            for file in files:
+                if file.filename == '':
+                    continue
+                filename = secure_filename(file.filename)
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+
+                # Convert to WebP
+                img = Image.open(filepath)
+                webp_filename = os.path.splitext(filename)[0] + '.webp'
+                webp_filepath = os.path.join(app.config['CONVERTED_FOLDER'], webp_filename)
+                img.save(webp_filepath, 'webp')
+
+                converted_files.append(webp_filepath)
+
+            # Provide download links for converted files
+            return render_template('image_converter.html', converted_files=converted_files)
+
+        # Handle URL fetching (to be implemented)
+        # Handle compression and enhancement (to be implemented)
+
+    return render_template('image_converter.html')
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

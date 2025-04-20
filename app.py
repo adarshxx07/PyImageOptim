@@ -67,19 +67,9 @@ def signup():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first() or User.query.filter_by(email=username).first()
-        if user and user.check_password(password):
-            flash('Login successful', 'success')
-            session['user'] = user.username
-            return redirect(url_for('index'))
-        else:
-            flash('Login failed', 'danger')
     return render_template('login.html')
 
-@app.route('/image-converter', methods=['GET', 'POST'])
+@app.route('/image_converter', methods=['GET', 'POST'])
 def image_converter():
     if request.method == 'POST':
         # Handle file uploads

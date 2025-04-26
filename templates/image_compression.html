@@ -33,22 +33,73 @@
       margin-bottom: 28px;
       width: 100%;
       text-align: left;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .form-group:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+    .form-step {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .step-number {
+      background: #007bff;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      font-weight: bold;
+      font-size: 14px;
     }
     label {
       font-weight: bold;
-      color: #333;
-      margin-bottom: 8px;
+      color: #1a237e;
+      margin-bottom: 12px;
       display: block;
+      font-size: 16px;
     }
-    input[type="file"],
-    input[type="range"] {
+    input[type="file"] {
       width: 100%;
       margin-top: 8px;
+      padding: 10px;
+      border: 2px dashed #007bff;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+    }
+    input[type="file"]:hover {
+      border-color: #0056b3;
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .quality-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    input[type="range"] {
+      flex-grow: 1;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
     }
     #qualityValue {
-      margin-left: 10px;
+      background: #007bff;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 15px;
       font-weight: bold;
-      color: #007bff;
+      min-width: 40px;
+      text-align: center;
     }
     .btn {
       padding: 12px 28px;
@@ -109,13 +160,21 @@
     <h1>Image Compressor</h1>
     <form action="/image_compression" method="post" enctype="multipart/form-data">
       <div class="form-group">
-        <label for="image">Select Image</label>
+        <div class="form-step">
+          <div class="step-number">1</div>
+          <label for="image">Select Your Image</label>
+        </div>
         <input type="file" name="image" id="image" accept="image/*" required>
       </div>
       <div class="form-group">
-        <label for="quality">Compression Quality (1-100, lower = more compression):</label>
-        <input type="range" id="quality" name="quality" min="1" max="100" value="60" oninput="qualityValue.value = quality.value">
-        <output id="qualityValue">60</output>
+        <div class="form-step">
+          <div class="step-number">2</div>
+          <label for="quality">Choose Compression Quality</label>
+        </div>
+        <div class="quality-container">
+          <input type="range" id="quality" name="quality" min="1" max="100" value="60" oninput="qualityValue.value = quality.value">
+          <output id="qualityValue">60</output>
+        </div>
       </div>
       <button class="btn" type="submit">Compress Image</button>
     </form>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'base.html' %}
 {% block content %}
 <nav class="navbar navbar-light bg-light">
@@ -114,15 +115,162 @@
         color: #070707;
         transform: scale(.6);
     }
+=======
+\login.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PyImageOptim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #2C3E50;
+            --accent-color: #16A085;
+            --light-bg: #F8F9FA;
+        }
 
-    #chk:checked ~ .login {
-        transform: translateY(-500px);
-    }
-    #chk:checked ~ .login label {
-        transform: scale(1);	
-    }
-    #chk:checked ~ .signup label {
-        transform: scale(.6);
-    }
+        body {
+            background-image: url('../static/img/pattern-bg.png');
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+>>>>>>> a383f8d4550215f844b960bc6f6c55db43f8cc7c
+
+        .form-title {
+            color: var(--secondary-color);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            color: #6c757d;
+            margin-bottom: 2rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.1);
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: white;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .signup-text {
+            margin-top: 1.5rem;
+            color: #6c757d;
+        }
+
+        .signup-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signup-link:hover {
+            color: var(--accent-color);
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 1rem;
+        }
+
+        .alert-danger {
+            background-color: #FFE9E9;
+            color: #DC3545;
+        }
+
+        .alert-success {
+            background-color: #E9FFE9;
+            color: #28A745;
+        }
     </style>
+<<<<<<< HEAD
 {% endblock %}
+=======
+</head>
+<body>
+    <div class="login-container">
+        <h1 class="form-title text-center">Welcome Back</h1>
+        <p class="form-subtitle text-center">Sign in to continue to PyImageOptim</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} mb-3">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="username" 
+                       placeholder="Username or Email" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" name="password" 
+                       placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-login">Sign In</button>
+        </form>
+
+        <div class="text-center signup-text">
+            Don't have an account? 
+            <a href="{{ url_for('signup') }}" class="signup-link">Create one</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+>>>>>>> a383f8d4550215f844b960bc6f6c55db43f8cc7c

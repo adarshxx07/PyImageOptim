@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Enhancer</title>
+  <style>
+    /* Reused styles */
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: url("{{ url_for('static', filename='images/service-bg.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #f9f9f9;
+    }
+    .enhance-container {
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+      max-width: 450px;
+      margin: 40px auto;
+      padding: 36px 32px 32px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .enhance-container h1 {
+      margin-bottom: 28px;
+      color: #1a237e;
+      letter-spacing: 1px;
+    }
+    .form-group {
+      margin-bottom: 28px;
+      width: 100%;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .form-group:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+    label {
+      font-weight: bold;
+      color: #1a237e;
+      margin-bottom: 12px;
+      display: block;
+      font-size: 16px;
+    }
+    input[type="file"] {
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      border: 2px dashed #007bff;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+    }
+    input[type="file"]:hover {
+      border-color: #0056b3;
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .adjust-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+    }
+    .btn {
+      padding: 12px 28px;
+      background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #0056b3 0%, #00aaff 100%);
+    }
+    .image-preview {
+      margin: 24px 0 10px 0;
+      max-width: 350px;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+      background: #fff;
+      padding: 8px;
+    }
+    .result-section {
+      margin-top: 30px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 12px;
+      padding: 18px 0 10px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .result-section h2 {
+      color: #007bff;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="enhance-container">
+    <h1>Image Enhancer</h1>
+    <form action="{{ url_for('image_enhancement') }}" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="image">Select Your Image</label>
+        <input type="file" name="image" id="image" accept="image/*" required>
+      </div>
+      <div class="form-group adjust-container">
+        <label for="brightness">Adjust Brightness (<span id="brightnessValue">100</span>%)</label>
+        <input type="range" id="brightness" name="brightness" min="0" max="200" value="100" oninput="brightnessValue.textContent = this.value">
+        
+        <label for="contrast">Adjust Contrast (<span id="contrastValue">100</span>%)</label>
+        <input type="range" id="contrast" name="contrast" min="0" max="200" value="100" oninput="contrastValue.textContent = this.value">
+        
+        <label for="sharpness">Adjust Sharpness (<span id="sharpnessValue">100</span>%)</label>
+        <input type="range" id="sharpness" name="sharpness" min="0" max="200" value="100" oninput="sharpnessValue.textContent = this.value">
+      </div>
+      <button class="btn" type="submit">Enhance Image</button>
+    </form>
+
+    {% if original %}
+    <div class="result-section">
+      <h2>Original Image</h2>
+      <img class="image-preview" src="{{ url_for('static', filename='uploads/' + original) }}">
+      <p>Original size: {{ original_size }} KB</p>
+    </div>
+    {% endif %}
+
+    {% if enhanced %}
+    <div class="result-section">
+      <h2>Enhanced Image</h2>
+      <img class="image-preview" src="{{ url_for('static', filename='enhanced/' + enhanced) }}">
+      <p>Enhanced size: {{ enhanced_size }} KB</p>
+      <a class="btn" href="{{ url_for('static', filename='enhanced/' + enhanced) }}" download>Download Enhanced Image</a>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

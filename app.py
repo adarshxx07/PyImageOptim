@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, send_from_directory  # Add this import for file downloads
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import bcrypt
-from PIL import Image  # Add this import for image processing
+from PIL import Image, ImageEnhance  # Add ImageEnhance for image enhancement
 import os
 import io
 
@@ -13,13 +13,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 UPLOAD_FOLDER = 'static/uploads'
 CONVERTED_FOLDER = 'converted'
 COMPRESSED_FOLDER = 'static/compressed'
+ENHANCED_FOLDER = 'static/enhanced'  # Add enhanced folder
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['CONVERTED_FOLDER'] = CONVERTED_FOLDER
 app.config['COMPRESSED_FOLDER'] = COMPRESSED_FOLDER
+app.config['ENHANCED_FOLDER'] = ENHANCED_FOLDER  # Configure enhanced folder
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(CONVERTED_FOLDER, exist_ok=True)
 os.makedirs(COMPRESSED_FOLDER, exist_ok=True)
+os.makedirs(ENHANCED_FOLDER, exist_ok=True)  # Create enhanced directory
 
 db = SQLAlchemy(app)
 
@@ -152,9 +155,67 @@ def image_compression():
                                compressed=file.filename,
                                original_size=original_size,
                                compressed_size=compressed_size)
+
 def compress_image(input_path, output_path, quality=60):
     from PIL import Image
     with Image.open(input_path) as img:
         img.save(output_path, optimize=True, quality=quality)
+
+def enhance_image(input_path, output_path, brightness=1.0, contrast=1.0, sharpness=1.0):
+    with Image.open(input_path) as img:
+        # Apply brightness enhancement
+        if brightness != 1.0:
+            enhancer = ImageEnhance.Brightness(img)
+            img = enhancer.enhance(brightness)
+        
+        # Apply contrast enhancement
+        if contrast != 1.0:
+            enhancer = ImageEnhance.Contrast(img)
+            img = enhancer.enhance(contrast)
+        
+        # Apply sharpness enhancement
+        if sharpness != 1.0:
+            enhancer = ImageEnhance.Sharpness(img)
+            img = enhancer.enhance(sharpness)
+        
+        img.save(output_path)
+
+@app.route('/image_enhancement', methods=['GET'])
+def image_enhancement_get():
+    return render_template('image_enhancement.html')
+
+@app.route('/image_enhancement', methods=['POST'])
+def image_enhancement():
+    if 'image' not in request.files:
+        return redirect(request.url)
+
+    file = request.files['image']
+    if file.filename == '':
+        return redirect(request.url)
+
+    if file:
+        filename = secure_filename(file.filename)
+        original_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        enhanced_path = os.path.join(app.config['ENHANCED_FOLDER'], filename)
+
+        file.save(original_path)
+
+        # Get enhancement parameters from form
+        brightness = float(request.form.get('brightness', 100)) / 100.0
+        contrast = float(request.form.get('contrast', 100)) / 100.0
+        sharpness = float(request.form.get('sharpness', 100)) / 100.0
+
+        # Enhance the image
+        enhance_image(original_path, enhanced_path, brightness, contrast, sharpness)
+
+        original_size = round(os.path.getsize(original_path) / 1024, 2)
+        enhanced_size = round(os.path.getsize(enhanced_path) / 1024, 2)
+
+        return render_template('image_enhancement.html',
+                            original=filename,
+                            enhanced=filename,
+                            original_size=original_size,
+                            enhanced_size=enhanced_size)
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -5,6 +5,8 @@ from flask_bcrypt import bcrypt
 from PIL import Image, ImageEnhance  # Add ImageEnhance for image enhancement
 import os
 import io
+import requests
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 app.secret_key = 'supersecretmre'
@@ -216,6 +218,45 @@ def image_enhancement():
                             enhanced=filename,
                             original_size=original_size,
                             enhanced_size=enhanced_size)
+
+@app.route('/web_url')
+def web_url():
+    return render_template('web_url.html')
+
+@app.route('/convert_url_image', methods=['POST'])
+def convert_url_image():
+    if 'image_url' not in request.form:
+        flash('No URL provided', 'error')
+        return redirect(url_for('web_url'))
+    
+    image_url = request.form['image_url']
+    try:
+        # Download image from URL
+        response = requests.get(image_url)
+        if response.status_code != 200:
+            flash('Failed to fetch image from URL', 'error')
+            return redirect(url_for('web_url'))
+
+        # Get original filename from URL
+        url_path = urlparse(image_url).path
+        original_filename = os.path.basename(url_path)
+        if not original_filename:
+            original_filename = 'image.jpg'
+
+        # Convert to WebP
+        output_filename = os.path.splitext(original_filename)[0] + '.webp'
+        output_path = os.path.join(app.config['CONVERTED_FOLDER'], output_filename)
+        
+        # Open image from bytes and convert
+        image = Image.open(io.BytesIO(response.content))
+        image.save(output_path, 'WEBP')
+        
+        flash('Image successfully converted!', 'success')
+        return render_template('web_url.html', converted_image=output_filename)
+
+    except Exception as e:
+        flash(f'Error processing image: {str(e)}', 'error')
+        return redirect(url_for('web_url'))
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

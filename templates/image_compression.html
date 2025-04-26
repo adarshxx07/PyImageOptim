@@ -1,0 +1,141 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Image Compressor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: url("{{ url_for('static', filename='images/service-bg.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #f9f9f9;
+    }
+    .compress-container {
+      background: rgba(255,255,255,0.35); /* More transparent */
+      border-radius: 16px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+      max-width: 450px;
+      margin: 40px auto;
+      padding: 36px 32px 32px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .compress-container h1 {
+      margin-bottom: 28px;
+      color: #1a237e;
+      letter-spacing: 1px;
+    }
+    .form-group {
+      margin-bottom: 28px;
+      width: 100%;
+      text-align: left;
+    }
+    label {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 8px;
+      display: block;
+    }
+    input[type="file"],
+    input[type="range"] {
+      width: 100%;
+      margin-top: 8px;
+    }
+    #qualityValue {
+      margin-left: 10px;
+      font-weight: bold;
+      color: #007bff;
+    }
+    .btn {
+      padding: 12px 28px;
+      background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #0056b3 0%, #00aaff 100%);
+    }
+    .image-preview {
+      margin: 24px 0 10px 0;
+      max-width: 350px;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      background: #fff;
+      padding: 8px;
+    }
+    .result-section {
+      margin-top: 30px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 12px;
+      padding: 18px 0 10px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .result-section h2 {
+      color: #007bff;
+      margin-bottom: 10px;
+    }
+    .result-section p {
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .download-btn {
+      margin-top: 10px;
+      background: linear-gradient(90deg, #28a745 0%, #00c851 100%);
+      color: #fff;
+      border-radius: 6px;
+      padding: 10px 22px;
+      font-size: 16px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+    .download-btn:hover {
+      background: linear-gradient(90deg, #218838 0%, #00b34d 100%);
+    }
+  </style>
+</head>
+<body>
+  <div class="compress-container">
+    <h1>Image Compressor</h1>
+    <form action="/image_compression" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="image">Select Image</label>
+        <input type="file" name="image" id="image" accept="image/*" required>
+      </div>
+      <div class="form-group">
+        <label for="quality">Compression Quality (1-100, lower = more compression):</label>
+        <input type="range" id="quality" name="quality" min="1" max="100" value="60" oninput="qualityValue.value = quality.value">
+        <output id="qualityValue">60</output>
+      </div>
+      <button class="btn" type="submit">Compress Image</button>
+    </form>
+
+    {% if original %}
+    <div class="result-section">
+      <h2>Original Image</h2>
+      <img class="image-preview" src="{{ url_for('static', filename='uploads/' + original) }}">
+      <p>Original size: {{ original_size }} KB</p>
+    </div>
+    {% endif %}
+
+    {% if compressed %}
+    <div class="result-section">
+      <h2>Compressed Image</h2>
+      <img class="image-preview" src="{{ url_for('static', filename='compressed/' + compressed) }}">
+      <p>Compressed size: {{ compressed_size }} KB</p>
+      <a class="download-btn" href="{{ url_for('static', filename='compressed/' + compressed) }}" download>Download Compressed Image</a>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

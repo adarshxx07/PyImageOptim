@@ -5,17 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Converter</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/converter.css') }}">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/service-bg.jpg') }}");
+            background-repeat: no-repeat;
+            background-position: left top;
+            background-size: cover;
+            background-color: #ffffff; /* Set a pure white background */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Image Converter</h1>
         <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
+                <label for="upload-method">Select Upload Method:</label>
+                <select id="upload-method" name="upload_method" onchange="toggleUploadFields()">
+                    <option value="device">From Device</option>
+                    <option value="url">From URL</option>
+                </select>
+            </div>
+            <div class="form-group" id="device-upload">
                 <label for="images">Upload Images:</label>
                 <input type="file" id="images" name="images" multiple accept=".png, .jpg, .jpeg, .gif">
             </div>
-            <div class="form-group">
-                <label for="image-url">Or Enter Image URL:</label>
+            <div class="form-group" id="url-upload" style="display: none;">
+                <label for="image-url">Enter Image URL:</label>
                 <input type="url" id="image-url" name="image_url" placeholder="https://example.com/image.jpg">
             </div>
             <div class="form-group">
@@ -43,5 +59,21 @@
             </ul>
         {% endif %}
     </div>
+
+    <script>
+        function toggleUploadFields() {
+            const method = document.getElementById('upload-method').value;
+            const deviceUpload = document.getElementById('device-upload');
+            const urlUpload = document.getElementById('url-upload');
+
+            if (method === 'device') {
+                deviceUpload.style.display = 'block';
+                urlUpload.style.display = 'none';
+            } else if (method === 'url') {
+                deviceUpload.style.display = 'none';
+                urlUpload.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>

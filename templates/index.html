@@ -54,7 +54,6 @@
             <!-- ***** Menu Start ***** -->
             <ul class="nav">
               <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
-              <li class="scroll-to-section"><a href="#services">Services</a></li>
               <li class="scroll-to-section"><a href="#about">About</a></li>
               <li class="scroll-to-section"><a href="#newsletter">Newsletter</a></li>
             </ul>        
@@ -68,12 +67,6 @@
     </div>
   </header>
   <!-- ***** Header Area End ***** -->
-  
-  <div id="modal" class="popupContainer" style="display:none;">
-    <div class="popupHeader">
-        <span class="modal_close"><i class="fa fa-times"></i></span>
-    </div>
-</div>
 
   <div class="main-banner wow fadeIn" id="top" data-wow-duration="1s" data-wow-delay="0.5s">
     <div class="container">
@@ -113,13 +106,15 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-lg-3 col-md-6">
-                <div class="service-item wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s">
-                    <div class="icon">
-                        <i class="fa fa-compress"></i>
+                <a href="{{ url_for('image_compression') }}" style="text-decoration: none; color: inherit;">
+                    <div class="service-item wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s">
+                        <div class="icon">
+                            <i class="fa fa-compress"></i>
+                        </div>
+                        <h4>Image Compression</h4>
+                        <p>Reduce image size without compromising quality.</p>
                     </div>
-                    <h4>Image Compression</h4>
-                    <p>Reduce image size without compromising quality.</p>
-                </div>
+                </a>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="service-item wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s">
@@ -206,8 +201,6 @@
         </div>
     </div>
 </div>
-
-<div class="container"><div class="row"><div class="col-lg-12"></div></div></div>
 
   <footer id="newsletter">
     <div class="container">

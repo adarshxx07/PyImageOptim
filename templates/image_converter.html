@@ -19,9 +19,8 @@
                 <input type="url" id="image-url" name="image_url" placeholder="https://example.com/image.jpg">
             </div>
             <div class="form-group">
-                <label for="compression">Compression Level:</label>
-                <input type="range" id="compression" name="compression" min="0" max="100" value="80">
-                <span id="compression-value">80%</span>
+                <label for="compression">Compression Level (0-100):</label>
+                <input type="number" id="compression" name="compression" min="0" max="100" value="80" step="1">
             </div>
             <div class="form-group">
                 <label for="enhancement">Enhancement Options:</label>

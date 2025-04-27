@@ -164,23 +164,45 @@ def compress_image(input_path, output_path, quality=60):
         img.save(output_path, optimize=True, quality=quality)
 
 def enhance_image(input_path, output_path, brightness=1.0, contrast=1.0, sharpness=1.0):
-    with Image.open(input_path) as img:
-        # Apply brightness enhancement
-        if brightness != 1.0:
-            enhancer = ImageEnhance.Brightness(img)
-            img = enhancer.enhance(brightness)
-        
-        # Apply contrast enhancement
-        if contrast != 1.0:
-            enhancer = ImageEnhance.Contrast(img)
-            img = enhancer.enhance(contrast)
-        
-        # Apply sharpness enhancement
-        if sharpness != 1.0:
-            enhancer = ImageEnhance.Sharpness(img)
-            img = enhancer.enhance(sharpness)
-        
-        img.save(output_path)
+    from PIL import Image, ImageEnhance, ImageFilter
+    try:
+        with Image.open(input_path) as img:
+            # Convert to RGB if needed
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
+            
+            # Apply brightness enhancement
+            if brightness != 1.0:
+                enhancer = ImageEnhance.Brightness(img)
+                img = enhancer.enhance(brightness)
+            
+            # Apply contrast enhancement
+            if contrast != 1.0:
+                enhancer = ImageEnhance.Contrast(img)
+                img = enhancer.enhance(contrast)
+            
+            # Apply sharpness enhancement
+            if sharpness != 1.0:
+                # Apply a subtle unsharp mask for better sharpening
+                if sharpness > 1.0:
+                    img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=150, threshold=3))
+                enhancer = ImageEnhance.Sharpness(img)
+                img = enhancer.enhance(sharpness)
+            
+            # Preserve EXIF data if present
+            try:
+                exif = img.info.get('exif', None)
+                if exif:
+                    img.save(output_path, quality=95, optimize=True, exif=exif)
+                else:
+                    img.save(output_path, quality=95, optimize=True)
+            except:
+                img.save(output_path, quality=95, optimize=True)
+            
+            return True
+    except Exception as e:
+        print(f"Error enhancing image: {str(e)}")
+        return False
 
 @app.route('/image_enhancement', methods=['GET'])
 def image_enhancement_get():
@@ -189,35 +211,50 @@ def image_enhancement_get():
 @app.route('/image_enhancement', methods=['POST'])
 def image_enhancement():
     if 'image' not in request.files:
+        flash('No file selected', 'error')
         return redirect(request.url)
 
     file = request.files['image']
     if file.filename == '':
+        flash('No file selected', 'error')
         return redirect(request.url)
 
     if file:
-        filename = secure_filename(file.filename)
-        original_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        enhanced_path = os.path.join(app.config['ENHANCED_FOLDER'], filename)
+        try:
+            filename = secure_filename(file.filename)
+            original_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            enhanced_path = os.path.join(app.config['ENHANCED_FOLDER'], f"enhanced_{filename}")
 
-        file.save(original_path)
+            # Save original file
+            file.save(original_path)
 
-        # Get enhancement parameters from form
-        brightness = float(request.form.get('brightness', 100)) / 100.0
-        contrast = float(request.form.get('contrast', 100)) / 100.0
-        sharpness = float(request.form.get('sharpness', 100)) / 100.0
+            # Get enhancement parameters from form
+            brightness = float(request.form.get('brightness', 100)) / 100.0
+            contrast = float(request.form.get('contrast', 100)) / 100.0
+            sharpness = float(request.form.get('sharpness', 100)) / 100.0
 
-        # Enhance the image
-        enhance_image(original_path, enhanced_path, brightness, contrast, sharpness)
+            # Enhance the image
+            success = enhance_image(original_path, enhanced_path, brightness, contrast, sharpness)
+            
+            if success:
+                original_size = round(os.path.getsize(original_path) / 1024, 2)
+                enhanced_size = round(os.path.getsize(enhanced_path) / 1024, 2)
+                
+                flash('Image enhanced successfully!', 'success')
+                return render_template('image_enhancement.html',
+                                    original=filename,
+                                    enhanced=f"enhanced_{filename}",
+                                    original_size=original_size,
+                                    enhanced_size=enhanced_size)
+            else:
+                flash('Error enhancing image. Please try again.', 'error')
+                return redirect(request.url)
+                
+        except Exception as e:
+            flash(f'Error processing image: {str(e)}', 'error')
+            return redirect(request.url)
 
-        original_size = round(os.path.getsize(original_path) / 1024, 2)
-        enhanced_size = round(os.path.getsize(enhanced_path) / 1024, 2)
-
-        return render_template('image_enhancement.html',
-                            original=filename,
-                            enhanced=filename,
-                            original_size=original_size,
-                            enhanced_size=enhanced_size)
+    return redirect(request.url)
 
 @app.route('/web_url')
 def web_url():

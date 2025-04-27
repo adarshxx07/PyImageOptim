@@ -3,69 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <title>URL Image Converter</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/templatemo-chain-app-dev.css') }}">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', sans-serif;
       text-align: center;
       padding: 50px;
-      background: url("{{ url_for('static', filename='images/service-bg.jpg') }}") no-repeat center center fixed;
-      background-size: cover;
-      background-color: #f4f4f9;
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                  url("{{ url_for('static', filename='images/slider-dec.png') }}"),
+                  url("{{ url_for('static', filename='images/service-bg.jpg') }}");
+      background-position: center center, left center, center center;
+      background-size: cover, contain, cover;
+      background-repeat: no-repeat, no-repeat, no-repeat;
+      min-height: 100vh;
     }
     .converter-container {
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
       max-width: 550px;
       margin: 40px auto;
-      padding: 30px;
+      padding: 36px 32px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    .converter-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, #4b8ef1, #7d56e6);
     }
     .converter-container h1 {
-      margin-bottom: 20px;
-      color: #00796b;
+      margin-bottom: 30px;
+      background: linear-gradient(to right, #4b8ef1, #7d56e6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 2.2rem;
+      font-weight: 700;
     }
     .form-group {
       margin-bottom: 20px;
     }
     label {
-      font-weight: bold;
-      color: #333;
+      font-weight: 500;
+      color: #2a2a2a;
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      font-size: 1.1rem;
     }
     input[type="url"] {
       width: 100%;
-      padding: 12px;
-      border: 2px dashed #00796b;
-      border-radius: 8px;
-      background-color: rgba(0, 121, 107, 0.05);
+      padding: 1rem 1.2rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.9);
       outline: none;
+      transition: all 0.3s ease;
+      font-size: 1rem;
     }
-    input[type="url"]:hover {
-      border-color: #004d40;
+    input[type="url"]:focus {
+      border-color: #4b8ef1;
+      box-shadow: 0 0 0 4px rgba(75, 142, 241, 0.15);
     }
     .btn {
-      padding: 12px 28px;
-      background: #00796b;
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #4b8ef1, #7d56e6);
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 18px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 20px;
     }
     .btn:hover {
-      background: #004d40;
+      background: linear-gradient(135deg, #1f5ec7, #6340c5);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(75, 142, 241, 0.3);
     }
     .result-section {
       margin-top: 30px;
-      padding: 20px;
+      padding: 25px;
       background: rgba(255, 255, 255, 0.9);
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
     .result-section h2 {
-      color: #00796b;
+      color: #4b8ef1;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
     }
     .result-section ul {
       text-align: left;
@@ -73,15 +107,17 @@
       padding: 0;
     }
     .result-section ul li {
-      margin: 8px 0;
-      color: #333;
+      margin: 12px 0;
+      color: #2a2a2a;
     }
     a.download-link {
       text-decoration: none;
-      color: #00796b;
-      font-weight: bold;
+      color: #4b8ef1;
+      font-weight: 600;
+      transition: all 0.3s ease;
     }
     a.download-link:hover {
+      color: #7d56e6;
       text-decoration: underline;
     }
   </style>

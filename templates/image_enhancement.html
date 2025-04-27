@@ -2,152 +2,351 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Image Enhancer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Enhancer - Professional Photo Enhancement</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/templatemo-chain-app-dev.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
   <style>
-    /* Reused styles */
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 50px;
-      background: url("{{ url_for('static', filename='images/service-bg.jpg') }}") no-repeat center center fixed;
-      background-size: cover;
-      background-color: #f9f9f9;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                  url("{{ url_for('static', filename='images/slider-dec.png') }}"),
+                  url("{{ url_for('static', filename='images/service-bg.jpg') }}");
+      background-position: center center, left center, center center;
+      background-size: cover, contain, cover;
+      background-repeat: no-repeat, no-repeat, no-repeat;
+      min-height: 100vh;
+      padding: 10px 5px;
     }
     .enhance-container {
-      background: rgba(255, 255, 255, 0.35);
-      border-radius: 16px;
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-      max-width: 450px;
-      margin: 40px auto;
-      padding: 36px 32px 32px 32px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .enhance-container h1 {
-      margin-bottom: 28px;
-      color: #1a237e;
-      letter-spacing: 1px;
-    }
-    .form-group {
-      margin-bottom: 28px;
-      width: 100%;
-      text-align: left;
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      max-width: 1000px;
+      margin: 10px auto;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
     }
-    .form-group:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    }
-    label {
-      font-weight: bold;
-      color: #1a237e;
-      margin-bottom: 12px;
-      display: block;
-      font-size: 16px;
-    }
-    input[type="file"] {
+    .enhance-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      margin-top: 8px;
-      padding: 10px;
-      border: 2px dashed #007bff;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.7);
-      cursor: pointer;
+      height: 5px;
+      background: linear-gradient(to right, #4b8ef1, #7d56e6);
     }
-    input[type="file"]:hover {
-      border-color: #0056b3;
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #4b8ef1, #7d56e6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    .header p {
+      color: #2a2a2a;
+      font-size: 1.1em;
+    }
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .controls {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .preview-section {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 15px;
+      text-align: center;
+    }
+    .image-upload {
+      position: relative;
+      padding: 15px;
+      border: 2px dashed #4b8ef1;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 15px;
       background: rgba(255, 255, 255, 0.9);
     }
-    .adjust-container {
+    .image-upload:hover {
+      border-color: #7d56e6;
+      background: rgba(75, 142, 241, 0.05);
+    }
+    .slider-group {
+      margin-bottom: 15px;
+    }
+    .slider-group label {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 15px;
+      justify-content: space-between;
+      align-items: center;
+      color: #2a2a2a;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .slider-value {
+      background: linear-gradient(to right, #4b8ef1, #7d56e6);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.9em;
     }
     input[type="range"] {
       width: 100%;
       height: 8px;
       border-radius: 4px;
-      background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+      appearance: none;
+      -webkit-appearance: none;
+      background: linear-gradient(105deg, rgba(91,104,235,1) 0%, rgba(40,225,253,1) 100%);
     }
-    .btn {
-      padding: 12px 28px;
-      background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+    .btn-enhance {
+      background: linear-gradient(135deg, #4b8ef1, #7d56e6);
       color: white;
       border: none;
-      border-radius: 6px;
-      font-size: 18px;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: background 0.2s;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    }
-    .btn:hover {
-      background: linear-gradient(90deg, #0056b3 0%, #00aaff 100%);
-    }
-    .image-preview {
-      margin: 24px 0 10px 0;
-      max-width: 350px;
-      border-radius: 10px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
-      background: #fff;
-      padding: 8px;
-    }
-    .result-section {
-      margin-top: 30px;
-      background: rgba(255,255,255,0.85);
+      padding: 10px 25px;
       border-radius: 12px;
-      padding: 18px 0 10px 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-weight: 600;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .result-section h2 {
-      color: #007bff;
-      margin-bottom: 10px;
+    .btn-enhance:hover {
+      background: linear-gradient(135deg, #1f5ec7, #6340c5);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(75, 142, 241, 0.3);
+    }
+    .preview-image {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .preview-controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .preview-controls button {
+      padding: 8px 20px;
+      border-radius: 12px;
+      font-size: 0.9em;
+      border: 2px solid #4b8ef1;
+      background: white;
+      color: #4b8ef1;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    .preview-controls button:hover {
+      background: #4b8ef1;
+      color: white;
+      transform: translateY(-2px);
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-label {
+      font-size: 0.9em;
+      color: #2a2a2a;
+      font-weight: 500;
+    }
+    .stat-value {
+      font-size: 1.1em;
+      font-weight: 600;
+      background: linear-gradient(to right, #4b8ef1, #7d56e6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
   <div class="enhance-container">
-    <h1>Image Enhancer</h1>
-    <form action="{{ url_for('image_enhancement') }}" method="post" enctype="multipart/form-data">
-      <div class="form-group">
-        <label for="image">Select Your Image</label>
-        <input type="file" name="image" id="image" accept="image/*" required>
+    <div class="header">
+      <h1>Professional Image Enhancement</h1>
+      <p>Enhance your photos with advanced adjustments and real-time preview</p>
+    </div>
+    
+    <form id="enhanceForm" action="{{ url_for('image_enhancement') }}" method="post" enctype="multipart/form-data">
+      <div class="workspace">
+        <div class="controls">
+          <div class="image-upload" id="dropZone">
+            <input type="file" name="image" id="image" accept="image/*" required style="display: none;">
+            <div id="uploadText">
+              <i class="fas fa-cloud-upload-alt" style="font-size: 2em; color: #6c757d;"></i>
+              <p>Drag and drop your image here<br>or click to browse</p>
+            </div>
+          </div>
+
+          <div class="slider-group">
+            <label>
+              Brightness
+              <span class="slider-value" id="brightnessValue">100%</span>
+            </label>
+            <input type="range" id="brightness" name="brightness" min="0" max="200" value="100" oninput="updateSlider(this)">
+          </div>
+
+          <div class="slider-group">
+            <label>
+              Contrast
+              <span class="slider-value" id="contrastValue">100%</span>
+            </label>
+            <input type="range" id="contrast" name="contrast" min="0" max="200" value="100" oninput="updateSlider(this)">
+          </div>
+
+          <div class="slider-group">
+            <label>
+              Sharpness
+              <span class="slider-value" id="sharpnessValue">100%</span>
+            </label>
+            <input type="range" id="sharpness" name="sharpness" min="0" max="200" value="100" oninput="updateSlider(this)">
+          </div>
+
+          <button type="submit" class="btn-enhance">Enhance Image</button>
+        </div>
+
+        <div class="preview-section">
+          <h3>Preview</h3>
+          <div id="previewContainer">
+            {% if original %}
+              <img class="preview-image" id="originalPreview" src="{{ url_for('static', filename='uploads/' + original) }}" alt="Original Image">
+            {% else %}
+              <div class="no-preview">
+                <p>Upload an image to see preview</p>
+              </div>
+            {% endif %}
+          </div>
+
+          {% if original and enhanced %}
+          <div class="preview-controls">
+            <button type="button" onclick="togglePreview('original')">Original</button>
+            <button type="button" onclick="togglePreview('enhanced')">Enhanced</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat-item">
+              <div class="stat-label">Original Size</div>
+              <div class="stat-value">{{ original_size }} KB</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Enhanced Size</div>
+              <div class="stat-value">{{ enhanced_size }} KB</div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
       </div>
-      <div class="form-group adjust-container">
-        <label for="brightness">Adjust Brightness (<span id="brightnessValue">100</span>%)</label>
-        <input type="range" id="brightness" name="brightness" min="0" max="200" value="100" oninput="brightnessValue.textContent = this.value">
-        
-        <label for="contrast">Adjust Contrast (<span id="contrastValue">100</span>%)</label>
-        <input type="range" id="contrast" name="contrast" min="0" max="200" value="100" oninput="contrastValue.textContent = this.value">
-        
-        <label for="sharpness">Adjust Sharpness (<span id="sharpnessValue">100</span>%)</label>
-        <input type="range" id="sharpness" name="sharpness" min="0" max="200" value="100" oninput="sharpnessValue.textContent = this.value">
-      </div>
-      <button class="btn" type="submit">Enhance Image</button>
     </form>
-
-    {% if original %}
-    <div class="result-section">
-      <h2>Original Image</h2>
-      <img class="image-preview" src="{{ url_for('static', filename='uploads/' + original) }}">
-      <p>Original size: {{ original_size }} KB</p>
-    </div>
-    {% endif %}
-
-    {% if enhanced %}
-    <div class="result-section">
-      <h2>Enhanced Image</h2>
-      <img class="image-preview" src="{{ url_for('static', filename='enhanced/' + enhanced) }}">
-      <p>Enhanced size: {{ enhanced_size }} KB</p>
-      <a class="btn" href="{{ url_for('static', filename='enhanced/' + enhanced) }}" download>Download Enhanced Image</a>
-    </div>
-    {% endif %}
   </div>
+
+  <script>
+    function updateSlider(slider) {
+      const valueDisplay = document.getElementById(slider.id + 'Value');
+      valueDisplay.textContent = slider.value + '%';
+    }
+
+    function togglePreview(type) {
+      const preview = document.getElementById('previewContainer').querySelector('img');
+      if (type === 'original') {
+        preview.src = "{{ url_for('static', filename='uploads/' + original) if original }}";
+      } else {
+        preview.src = "{{ url_for('static', filename='enhanced/' + enhanced) if enhanced }}";
+      }
+    }
+
+    // Drag and drop functionality
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('image');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+      dropZone.classList.add('highlight');
+    }
+
+    function unhighlight(e) {
+      dropZone.classList.remove('highlight');
+    }
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      fileInput.files = files;
+      handleFiles(files);
+    }
+
+    fileInput.addEventListener('change', function() {
+      handleFiles(this.files);
+    });
+
+    function handleFiles(files) {
+      if (files.length > 0) {
+        const file = files[0];
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const preview = document.getElementById('previewContainer');
+            preview.innerHTML = `<img class="preview-image" src="${e.target.result}" alt="Preview">`;
+          }
+          reader.readAsDataURL(file);
+        }
+      }
+    }
+  </script>
 </body>
 </html>

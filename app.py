@@ -2,11 +2,23 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import bcrypt
-from PIL import Image, ImageEnhance  # Add ImageEnhance for image enhancement
+from PIL import Image, ImageEnhance
 import os
 import io
 import requests
-from urllib.parse import urlparse
+import logging
+import zipfile
+from datetime import datetime
+from urllib.parse import urlparse, urljoin
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.edge.service import Service
+from selenium.webdriver.edge.options import Options
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
+
+# Initialize logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.secret_key = 'supersecretmre'
@@ -257,6 +269,107 @@ def convert_url_image():
     except Exception as e:
         flash(f'Error processing image: {str(e)}', 'error')
         return redirect(url_for('web_url'))
+
+def is_valid_url(url):
+    """Checks if a URL is valid using regex."""
+    import re
+    regex = re.compile(
+        r'^(?:http|ftp)s?://'  # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
+        r'localhost|'  # localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+        r'(?::\d+)?'  # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    return re.match(regex, url) is not None
+
+def extract_images_from_url_selenium(url):
+    """Extracts image URLs from a webpage using Selenium with Edge."""
+    try:
+        edge_options = Options()
+        edge_options.add_argument("--headless")
+        edge_options.add_argument("--disable-gpu")
+        edge_options.add_argument("--no-sandbox")
+
+        service = Service(EdgeChromiumDriverManager().install())
+        driver = webdriver.Edge(service=service, options=edge_options)
+
+        driver.get(url)
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        img_tags = soup.find_all('img')
+        image_urls = [img['src'] for img in img_tags if img.get('src')]
+
+        absolute_image_urls = []
+        for image_url in image_urls:
+            if image_url.startswith('http://') or image_url.startswith('https://'):
+                absolute_image_urls.append(image_url)
+            else:
+                absolute_image_urls.append(urljoin(url, image_url))
+
+        driver.quit()
+        return absolute_image_urls
+    except Exception as e:
+        logger.error(f"Error fetching URL with Selenium: {e}")
+        return []
+
+@app.route('/extract-images', methods=['POST'])
+def extract_images():
+    url = request.form.get('url')
+    if not url or not is_valid_url(url):
+        flash('Please enter a valid URL', 'error')
+        return redirect(url_for('web_url'))
+
+    image_urls = extract_images_from_url_selenium(url)
+    if not image_urls:
+        flash('No images found on the webpage', 'error')
+        return redirect(url_for('web_url'))
+
+    return render_template('select_images.html', image_urls=image_urls)
+
+@app.route('/convert-selected', methods=['POST'])
+def convert_selected():
+    selected_urls = request.form.getlist('selected_images')
+    if not selected_urls:
+        flash('Please select at least one image', 'error')
+        return redirect(url_for('web_url'))
+
+    # Create a zip file in memory
+    memory_file = io.BytesIO()
+    with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for url in selected_urls:
+            try:
+                response = requests.get(url)
+                if response.status_code == 200:
+                    # Get original filename from URL
+                    url_path = urlparse(url).path
+                    original_filename = os.path.basename(url_path)
+                    if not original_filename:
+                        original_filename = 'image.jpg'
+
+                    # Convert to WebP
+                    output_filename = os.path.splitext(original_filename)[0] + '.webp'
+                    
+                    # Open image from bytes and convert
+                    image = Image.open(io.BytesIO(response.content))
+                    
+                    # Save as WebP in memory
+                    img_byte_arr = io.BytesIO()
+                    image.save(img_byte_arr, format='WEBP')
+                    img_byte_arr = img_byte_arr.getvalue()
+                    
+                    # Add to zip
+                    zipf.writestr(output_filename, img_byte_arr)
+            except Exception as e:
+                logger.error(f"Error converting image {url}: {e}")
+                continue
+
+    memory_file.seek(0)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return send_file(
+        memory_file,
+        mimetype='application/zip',
+        as_attachment=True,
+        download_name=f'converted_images_{timestamp}.zip'
+    )
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

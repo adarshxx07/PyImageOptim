@@ -53,6 +53,7 @@
       font-size: 18px;
       cursor: pointer;
       transition: background 0.2s;
+      margin: 10px;
     }
     .btn:hover {
       background: #004d40;
@@ -84,17 +85,40 @@
     a.download-link:hover {
       text-decoration: underline;
     }
+    .option-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .active-option {
+      background: #004d40;
+    }
   </style>
 </head>
 <body>
   <div class="converter-container">
     <h1>URL Image Converter</h1>
-    <form action="/convert_url_image" method="post">
+    
+    <div class="option-buttons">
+      <button class="btn" onclick="showForm('single')" id="singleBtn">Single Image</button>
+      <button class="btn" onclick="showForm('multiple')" id="multipleBtn">Extract from Webpage</button>
+    </div>
+
+    <form id="singleImageForm" action="/convert_url_image" method="post">
       <div class="form-group">
-        <label for="image-url">Enter Image URL</label>
-        <input type="url" id="image-url" name="image_url" placeholder="Enter image URL (e.g., from Flipkart, Amazon)" required>
+        <label for="single-image-url">Enter Single Image URL</label>
+        <input type="url" id="single-image-url" name="image_url" placeholder="Enter direct image URL" required>
       </div>
       <button class="btn" type="submit">Convert to WebP</button>
+    </form>
+
+    <form id="extractImagesForm" action="/extract-images" method="post" style="display: none;">
+      <div class="form-group">
+        <label for="webpage-url">Enter Webpage URL</label>
+        <input type="url" id="webpage-url" name="url" placeholder="Enter webpage URL to extract images" required>
+      </div>
+      <button class="btn" type="submit">Extract Images</button>
     </form>
 
     {% if converted_image %}
@@ -106,5 +130,29 @@
     </div>
     {% endif %}
   </div>
+
+  <script>
+    function showForm(type) {
+      const singleForm = document.getElementById('singleImageForm');
+      const extractForm = document.getElementById('extractImagesForm');
+      const singleBtn = document.getElementById('singleBtn');
+      const multipleBtn = document.getElementById('multipleBtn');
+
+      if (type === 'single') {
+        singleForm.style.display = 'block';
+        extractForm.style.display = 'none';
+        singleBtn.classList.add('active-option');
+        multipleBtn.classList.remove('active-option');
+      } else {
+        singleForm.style.display = 'none';
+        extractForm.style.display = 'block';
+        singleBtn.classList.remove('active-option');
+        multipleBtn.classList.add('active-option');
+      }
+    }
+
+    // Set single image as default view
+    window.onload = () => showForm('single');
+  </script>
 </body>
 </html>

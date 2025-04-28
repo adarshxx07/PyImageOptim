@@ -107,33 +107,55 @@ def converted_file(filename):
 @app.route('/image_converter', methods=['GET', 'POST'])
 def image_converter():
     if request.method == 'POST':
-        if 'image' not in request.files:
+        if 'images' not in request.files:
             flash('No file selected', 'error')
             return redirect(request.url)
         
-        file = request.files['image']
-        if file.filename == '':
+        files = request.files.getlist('images')
+        if not files or all(f.filename == '' for f in files):
             flash('No file selected', 'error')
             return redirect(request.url)
 
-        if file:
-            filename = secure_filename(file.filename)
-            # Save original file
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
-            
-            # Convert to WebP
-            output_filename = os.path.splitext(filename)[0] + '.webp'
-            output_path = os.path.join(app.config['CONVERTED_FOLDER'], output_filename)
-            
-            with Image.open(file_path) as img:
-                img.save(output_path, 'WEBP')
-            
-            flash('Image successfully converted to WebP!', 'success')
-            return render_template('image_converter.html', 
-                                original=filename,
-                                converted=output_filename)
-    
+        # Get compression value from form, default to 80
+        compression = int(request.form.get('compression', 80))
+
+        converted_filenames = []
+        original_filenames = []
+        size_info = []
+        for file in files:
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                output_filename = os.path.splitext(filename)[0] + '.webp'
+                output_path = os.path.join(app.config['CONVERTED_FOLDER'], output_filename)
+                try:
+                    with Image.open(file_path) as img:
+                        img.save(output_path, 'WEBP', quality=compression, optimize=True)
+                    converted_filenames.append(output_filename)
+                    original_filenames.append(filename)
+                    # Calculate sizes
+                    orig_size = os.path.getsize(file_path)
+                    conv_size = os.path.getsize(output_path)
+                    percent = 0
+                    if orig_size > 0:
+                        percent = 100 * (orig_size - conv_size) / orig_size
+                    size_info.append({
+                        'original': filename,
+                        'converted': f'converted/{output_filename}',
+                        'orig_size': round(orig_size/1024, 2),
+                        'conv_size': round(conv_size/1024, 2),
+                        'percent': round(percent, 1)
+                    })
+                except Exception as e:
+                    logger.error(f"Error converting {filename}: {e}")
+                    flash(f'Error converting {filename}: {e}', 'error')
+        if converted_filenames:
+            flash('Image(s) successfully converted to WebP!', 'success')
+        return render_template('image_converter.html', 
+                               original=original_filenames,
+                               converted_files=[f'converted/{fn}' for fn in converted_filenames],
+                               size_info=size_info)
     return render_template('image_converter.html')
 
 @app.route('/image_compression', methods=['GET'])

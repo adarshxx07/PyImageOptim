@@ -47,8 +47,23 @@
         <div class="col-12">
           <nav class="main-nav">
             <!-- ***** Logo Start ***** -->
-            <a href="index.html" class="logo">
-              <img src="static/images/PyImageOptim.gif" alt="PyImageOptim" width="150" height="50">
+            <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 16px; margin-left: 58px; text-decoration: none; height: 72px;">
+              <!-- SVG Logo: Image conversion effect, larger and shifted right -->
+              <span style="display:inline-flex; align-items:center; justify-content:center; background: linear-gradient(135deg, #007bff 60%, #00b894 100%); border-radius: 16px; padding: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); height:60px; width:60px;">
+                <svg width="48" height="48" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+                  <!-- Image icon (left) -->
+                  <rect x="6" y="14" width="18" height="18" rx="4" fill="#e0e7ff" stroke="#007bff" stroke-width="2"/>
+                  <circle cx="13" cy="21" r="2.5" fill="#00b894"/>
+                  <path d="M8 28l6-7 7 9" stroke="#00b894" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <!-- Arrow (center) -->
+                  <path d="M28 23h8m0 0l-3-3m3 3l-3 3" stroke="#007bff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <!-- Image icon (right, different color) -->
+                  <rect x="32" y="24" width="18" height="18" rx="4" fill="#fff" stroke="#00b894" stroke-width="2"/>
+                  <circle cx="39" cy="31" r="2.5" fill="#007bff"/>
+                  <path d="M34 40l6-7 7 9" stroke="#007bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span style="font-size:2rem; font-weight:700; color:#007bff; letter-spacing:1px; font-family:'Roboto',sans-serif; line-height:1;">PyImageOptim</span>
             </a>
             <!-- ***** Logo End ***** -->
             <!-- ***** Menu Start ***** -->
@@ -159,57 +174,87 @@
     </div>
 </div>
 
-  <div id="about" class="about-us section" style="background: url('static/images/about-bg.jpg') no-repeat center center/cover;">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 align-self-center">
-                <div class="section-heading">
-                    <h4>About <em>PyImageOptim</em></h4>
-                    <p>We are dedicated to providing the best tools for image optimization, helping you save space and improve performance.</p>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="right-image">
-                    <img src="static/images/about-right-dec.png" alt="About Image">
-                </div>
-            </div>
+  <div id="about" class="about-us section" style="background: linear-gradient(135deg, #e0e7ff 0%, #fff 100%), url('static/images/about-bg.jpg') no-repeat center center/cover;">
+  <div class="container py-5">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <div class="section-heading wow fadeInLeft" data-wow-duration="1s" data-wow-delay="0.2s">
+          <h4 style="font-size:2.2rem; font-weight:700; color:#007bff;">
+            About <em style="color:#00b894; font-style:normal;">PyImageOptim</em>
+          </h4>
+          <p style="font-size:1.15rem; color:#333; margin-top:18px;">
+            <strong>PyImageOptim</strong> is your all-in-one solution for image optimization.<br>
+            <span style="color:#00b894; font-weight:500;">Our mission:</span> Make image processing <b>fast</b>, <b>easy</b>, and <b>accessible</b> for everyone.
+          </p>
+          <ul style="list-style:none; padding:0; margin:28px 0 18px 0;">
+            <li style="margin-bottom:12px;"><i class="fa fa-check-circle" style="color:#00b894; margin-right:8px;"></i><b>Key Features:</b> Compress, convert, and enhance images in seconds.</li>
+            <li style="margin-bottom:12px;"><i class="fa fa-bolt" style="color:#007bff; margin-right:8px;"></i><b>How It Works:</b> Upload or link your image, choose your options, and download the optimized result.</li>
+            <li style="margin-bottom:12px;"><i class="fa fa-cogs" style="color:#fd7e14; margin-right:8px;"></i><b>Technologies:</b> Python, Flask, PIL for robust, secure performance.</li>
+            <li style="margin-bottom:12px;"><i class="fa fa-star" style="color:#f1c40f; margin-right:8px;"></i><b>Benefits:</b> Save storage, speed up your website, improve SEO, and keep your images looking great.</li>
+          </ul>
+          <div style="background:#f8fafc; border-radius:10px; padding:18px 22px; margin-bottom:18px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+            <p style="margin-bottom:6px; color:#007bff;"><b>Created by:</b> <span style="color:#00b894;">The PyImageOptim Team</span></p>
+            <p style="margin-bottom:0; color:#007bff;"><b>Contact:</b> <a href="mailto:info@company.co" style="color:#00b894; text-decoration:underline;">info@company.co</a></p>
+          </div>
+          <p style="font-style:italic; color:#555; font-size:1.1rem;">
+            <i class="fa fa-rocket" style="color:#007bff;"></i> Ready to optimize? <span style="color:#00b894;">Try our services above or reach out with your feedback!</span>
+          </p>
         </div>
+      </div>
+      <div class="col-lg-6 text-center wow fadeInRight" data-wow-duration="1s" data-wow-delay="0.4s">
+        <div class="right-image position-relative">
+          <img src="static/images/about-right-dec.png" alt="About Image" class="img-fluid rounded shadow" style="max-width:90%;">
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
-  <div id="clients" class="the-clients section">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 offset-lg-2">
-                <div class="section-heading">
-                    <h4>What Our <em>Clients Say</em></h4>
-                </div>
-            </div>
+  <div id="clients" class="the-clients section" style="background: linear-gradient(120deg, #e0e7ff 0%, #fff 100%);">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="section-heading text-center wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.5s">
+          <h4 style="font-size:2rem; font-weight:700; color:#007bff;">
+            What Our <em style="color:#00b894; font-style:normal;">Clients Say</em>
+          </h4>
+          <p style="color:#333; font-size:1.1rem;">Real feedback from users who optimized their images and workflow with PyImageOptim.</p>
         </div>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="testimonial-item wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s">
-                    <p>"PyImageOptim has completely transformed the way we handle images. Highly recommended!"</p>
-                    <h4>Shivam Singh</h4>
-                    <span>CEO, shyqlgen</span>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="testimonial-item wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s">
-                    <p>"The compression and enhancement tools are top-notch. Saved us a lot of storage space."</p>
-                    <h4>Tony stark</h4>
-                    <span>CEO, Stark Industries</span>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="testimonial-item wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s">
-                    <p>"The best image optimization tool I've ever used. The support team is amazing too!"</p>
-                    <h4>Bruce Wayne</h4>
-                    <span>Freelancer</span>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="testimonial-item p-4 rounded shadow-lg h-100 bg-white wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.2s" style="position:relative;">
+          <img src="static/images/client-bg.png" alt="Client 1" class="rounded-circle border border-3" style="width:80px; height:80px; object-fit:cover; position:absolute; top:-40px; left:50%; transform:translateX(-50%); background:#fff;">
+          <div style="margin-top:50px;">
+            <p style="font-size:1.05rem; color:#444;">"PyImageOptim reduced our website's image load time by 60%. Our SEO and user engagement improved instantly! Highly recommended for any business."</p>
+            <h4 style="color:#007bff; font-weight:600; margin-bottom:0;">Shivam Singh</h4>
+            <span style="color:#00b894;">CEO, shyqlgen</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="testimonial-item p-4 rounded shadow-lg h-100 bg-white wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.4s" style="position:relative;">
+          <img src="static/images/service-icon-01.png" alt="Client 2" class="rounded-circle border border-3" style="width:80px; height:80px; object-fit:cover; position:absolute; top:-40px; left:50%; transform:translateX(-50%); background:#fff;">
+          <div style="margin-top:50px;">
+            <p style="font-size:1.05rem; color:#444;">"The batch compression and format conversion features saved us hours every week. PyImageOptim is a must-have for content creators!"</p>
+            <h4 style="color:#007bff; font-weight:600; margin-bottom:0;">Tony Stark</h4>
+            <span style="color:#00b894;">CTO, Stark Industries</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="testimonial-item p-4 rounded shadow-lg h-100 bg-white wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.6s" style="position:relative;">
+          <img src="static/images/service-icon-02.png" alt="Client 3" class="rounded-circle border border-3" style="width:80px; height:80px; object-fit:cover; position:absolute; top:-40px; left:50%; transform:translateX(-50%); background:#fff;">
+          <div style="margin-top:50px;">
+            <p style="font-size:1.05rem; color:#444;">"I love the enhancement tools! My portfolio images look sharper and load faster. The interface is so easy to use."</p>
+            <h4 style="color:#007bff; font-weight:600; margin-bottom:0;">Bruce Wayne</h4>
+            <span style="color:#00b894;">Freelance Designer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
   <footer id="newsletter">

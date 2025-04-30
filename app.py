@@ -106,6 +106,9 @@ def converted_file(filename):
 
 @app.route('/image_converter', methods=['GET', 'POST'])
 def image_converter():
+    if 'username' not in session:
+        flash('Please log in to access this service.', 'warning')
+        return redirect(url_for('login'))
     if request.method == 'POST':
         if 'images' not in request.files:
             flash('No file selected', 'error')
@@ -160,10 +163,16 @@ def image_converter():
 
 @app.route('/image_compression', methods=['GET'])
 def image_compression_get():
+    if 'username' not in session:
+        flash('Please log in to access this service.', 'warning')
+        return redirect(url_for('login'))
     return render_template('image_compression.html')
 
 @app.route('/image_compression', methods=['POST'])
 def image_compression():
+    if 'username' not in session:
+        flash('Please log in to access this service.', 'warning')
+        return redirect(url_for('login'))
     if 'image' not in request.files:
         return redirect(request.url)
 
@@ -218,10 +227,16 @@ def enhance_image(input_path, output_path, brightness=1.0, contrast=1.0, sharpne
 
 @app.route('/image_enhancement', methods=['GET'])
 def image_enhancement_get():
+    if 'username' not in session:
+        flash('Please log in to access this service.', 'warning')
+        return redirect(url_for('login'))
     return render_template('image_enhancement.html')
 
 @app.route('/image_enhancement', methods=['POST'])
 def image_enhancement():
+    if 'username' not in session:
+        flash('Please log in to access this service.', 'warning')
+        return redirect(url_for('login'))
     if 'image' not in request.files:
         return redirect(request.url)
 
@@ -255,10 +270,16 @@ def image_enhancement():
 
 @app.route('/web_url')
 def web_url():
+    if 'username' not in session:
+        flash('Please log in to access this service.', 'warning')
+        return redirect(url_for('login'))
     return render_template('web_url.html')
 
 @app.route('/convert_url_image', methods=['POST'])
 def convert_url_image():
+    if 'username' not in session:
+        flash('Please log in to access this service.', 'warning')
+        return redirect(url_for('login'))
     if 'image_url' not in request.form:
         flash('No URL provided', 'error')
         return redirect(url_for('web_url'))
@@ -392,6 +413,12 @@ def convert_selected():
         as_attachment=True,
         download_name=f'converted_images_{timestamp}.zip'
     )
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

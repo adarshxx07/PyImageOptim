@@ -71,6 +71,11 @@
               <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
               <li class="scroll-to-section"><a href="#about">About</a></li>
               <li class="scroll-to-section"><a href="#newsletter">Newsletter</a></li>
+              {% if session['username'] %}
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+              {% else %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+              {% endif %}
             </ul>        
             <a class='menu-trigger'>
                 <span>Menu</span>
@@ -272,12 +277,7 @@
                 <div class="footer-widget">
                     <h4>Follow Us</h4>
                     <ul class="social-icons">
-                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                        <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                    </ul>
-                </div>
+                        <li><a href="#"><i class
             </div>
             <div class="col-lg-4">
                 <div class="footer-widget">

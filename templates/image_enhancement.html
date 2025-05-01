@@ -168,6 +168,26 @@
       color: white;
       transform: translateY(-2px);
     }
+    .btn-download {
+      padding: 8px 20px;
+      border-radius: 12px;
+      font-size: 0.9em;
+      border: 2px solid #4b8ef1;
+      background: white;
+      color: #4b8ef1;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-download:hover {
+      background: #4b8ef1;
+      color: white;
+      transform: translateY(-2px);
+    }
     .stats {
       display: flex;
       justify-content: space-around;
@@ -257,6 +277,9 @@
           <div class="preview-controls">
             <button type="button" onclick="togglePreview('original')">Original</button>
             <button type="button" onclick="togglePreview('enhanced')">Enhanced</button>
+            <a href="{{ url_for('static', filename='enhanced/' + enhanced) }}" download class="btn-download">
+              <i class="fas fa-download"></i> Download
+            </a>
           </div>
 
           <div class="stats">

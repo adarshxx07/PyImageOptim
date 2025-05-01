@@ -3,29 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <title>URL Image Converter</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/templatemo-chain-app-dev.css') }}">
   <style>
+    :root {
+      --primary: #4b8ef1;
+      --secondary: #7d56e6;
+      --trans: .3s;
+    }
     body {
-      font-family: 'Roboto', sans-serif;
+      font-family: sans-serif;
       text-align: center;
-      padding: 50px;
-      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-                  url("{{ url_for('static', filename='images/slider-dec.png') }}"),
-                  url("{{ url_for('static', filename='images/service-bg.jpg') }}");
-      background-position: center center, left center, center center;
-      background-size: cover, contain, cover;
-      background-repeat: no-repeat, no-repeat, no-repeat;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(#0009, #0009),
+                url("{{ url_for('static', filename='images/service-bg.jpg') }}") center/cover;
       min-height: 100vh;
     }
     .converter-container {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 25px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-      max-width: 550px;
-      margin: 40px auto;
-      padding: 36px 32px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
+      background: #fffc;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px #0002;
+      max-width: 450px;
+      margin: 20px auto;
+      padding: 25px;
+      position: relative;
     }
     .converter-container::before {
       content: '';
@@ -33,93 +33,66 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 5px;
-      background: linear-gradient(to right, #4b8ef1, #7d56e6);
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 15px 15px 0 0;
     }
-    .converter-container h1 {
-      margin-bottom: 30px;
-      background: linear-gradient(to right, #4b8ef1, #7d56e6);
-      background-clip: text;
+    h1 {
+      margin-bottom: 25px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
-      font-size: 2.2rem;
-      font-weight: 700;
+      font-size: 2rem;
     }
-    .form-group {
-      margin-bottom: 20px;
-    }
+    .form-group { margin-bottom: 20px; }
     label {
-      font-weight: 500;
-      color: #2a2a2a;
       display: block;
-      margin-bottom: 12px;
-      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: #333;
+      font-weight: 500;
     }
     input[type="url"] {
       width: 100%;
-      padding: 1rem 1.2rem;
-      border: 2px solid #e0e0e0;
-      border-radius: 12px;
-      background-color: rgba(255, 255, 255, 0.9);
-      outline: none;
-      transition: all 0.3s ease;
-      font-size: 1rem;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: var(--trans);
     }
     input[type="url"]:focus {
-      border-color: #4b8ef1;
-      box-shadow: 0 0 0 4px rgba(75, 142, 241, 0.15);
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px #4b8ef120;
     }
     .btn {
       width: 100%;
-      padding: 1rem;
-      background: linear-gradient(135deg, #4b8ef1, #7d56e6);
+      padding: 12px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
       color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
+      border: 0;
+      border-radius: 8px;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-top: 20px;
+      transition: var(--trans);
     }
     .btn:hover {
-      background: linear-gradient(135deg, #1f5ec7, #6340c5);
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(75, 142, 241, 0.3);
+      box-shadow: 0 5px 15px #4b8ef140;
     }
     .result-section {
-      margin-top: 30px;
-      padding: 25px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 15px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 8px;
     }
-    .result-section h2 {
-      color: #4b8ef1;
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-    }
-    .result-section ul {
-      text-align: left;
-      list-style-type: none;
-      padding: 0;
-    }
-    .result-section ul li {
-      margin: 12px 0;
-      color: #2a2a2a;
-    }
-    a.download-link {
+    .download-link {
+      color: var(--primary);
       text-decoration: none;
-      color: #4b8ef1;
-      font-weight: 600;
-      transition: all 0.3s ease;
+      font-weight: 500;
     }
-    a.download-link:hover {
-      color: #7d56e6;
-      text-decoration: underline;
-    }
+    .download-link:hover { color: var(--secondary); }
   </style>
 </head>
 <body>
@@ -128,17 +101,16 @@
     <form action="/convert_url_image" method="post">
       <div class="form-group">
         <label for="image-url">Enter Image URL</label>
-        <input type="url" id="image-url" name="image_url" placeholder="Enter image URL (e.g., from Flipkart, Amazon)" required>
+        <input type="url" id="image-url" name="image_url" placeholder="Enter image URL" required>
       </div>
       <button class="btn" type="submit">Convert to WebP</button>
     </form>
 
     {% if converted_image %}
     <div class="result-section">
-      <h2>Converted Image</h2>
-      <ul>
-        <li><a class="download-link" href="{{ url_for('static', filename='converted/' + converted_image) }}" download>{{ converted_image }}</a></li>
-      </ul>
+      <a class="download-link" href="{{ url_for('static', filename='converted/' + converted_image) }}" download>
+        Download Converted Image
+      </a>
     </div>
     {% endif %}
   </div>

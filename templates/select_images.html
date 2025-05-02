@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Images to Convert</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background: url("{{ url_for('static', filename='images/service-bg.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .image-item {
+            position: relative;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background: white;
+        }
+        .image-preview {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        .checkbox-wrapper {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 3px;
+            border-radius: 3px;
+        }
+        .btn {
+            background: #00796b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .btn:hover {
+            background: #004d40;
+        }
+        .select-all {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Select Images to Convert</h1>
+        <div class="select-all">
+            <button class="btn" onclick="toggleAll()">Select/Deselect All</button>
+        </div>
+        <form action="{{ url_for('convert_selected') }}" method="post">
+            <div class="image-grid">
+                {% for url in image_urls %}
+                <div class="image-item">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" name="selected_images" value="{{ url }}" id="img{{ loop.index }}">
+                    </div>
+                    <img src="{{ url }}" alt="Image {{ loop.index }}" class="image-preview">
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn">Convert Selected Images</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleAll() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            checkboxes.forEach(cb => cb.checked = !allChecked);
+        }
+    </script>
+</body>
+</html>

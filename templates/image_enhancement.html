@@ -19,7 +19,7 @@
       padding: 10px 5px;
     }
     .enhance-container {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.4);
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
       max-width: 1000px;
@@ -62,13 +62,13 @@
       margin-top: 15px;
     }
     .controls {
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.4);
       padding: 15px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
     .preview-section {
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.4);
       padding: 15px;
       border-radius: 15px;
       text-align: center;
@@ -82,7 +82,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       margin-bottom: 15px;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.4);
     }
     .image-upload:hover {
       border-color: #7d56e6;
@@ -268,7 +268,7 @@
               <img class="preview-image" id="originalPreview" src="{{ url_for('static', filename='uploads/' + original) }}" alt="Original Image">
             {% else %}
               <div class="no-preview">
-                <p>Upload an image to see preview</p>
+                <p><b>Upload an image to see preview</b></p>
               </div>
             {% endif %}
           </div>

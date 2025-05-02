@@ -19,23 +19,16 @@
       min-height: 100vh;
     }
     .converter-container {
-      background: #fffc;
-      border-radius: 15px;
-      box-shadow: 0 8px 25px #0002;
-      max-width: 450px;
-      margin: 20px auto;
-      padding: 25px;
-      position: relative;
+      background: transparent;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      max-width: 550px;
+      margin: 40px auto;
+      padding: 30px;
     }
-    .converter-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      border-radius: 15px 15px 0 0;
+    .converter-container h1 {
+      margin-bottom: 20px;
+      color:#1a237e;
     }
     h1 {
       margin-bottom: 25px;
@@ -47,6 +40,8 @@
     }
     .form-group { margin-bottom: 20px; }
     label {
+      font-weight: bold;
+      color: #1a237e;
       display: block;
       margin-bottom: 10px;
       color: #333;
@@ -55,31 +50,34 @@
     input[type="url"] {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ddd;
+      border: 2px dashed #1a237e;
       border-radius: 8px;
       box-sizing: border-box;
       transition: var(--trans);
     }
-    input[type="url"]:focus {
-      border-color: var(--primary);
-      outline: none;
-      box-shadow: 0 0 0 3px #4b8ef120;
+    input[type="url"]:hover {
+      border-color: #1a237e;
     }
-    .btn {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      color: white;
-      border: 0;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--trans);
+    .container {
+        max-width: 700px;
+        margin: 50px auto;
+        background: rgba(255, 255, 255, 0.2); /* Match other pages */
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px #4b8ef140;
+    .btn, button.btn {
+        background: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 24px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .btn:hover, button.btn:hover {
+        background: #0056b3;
     }
     .result-section {
       margin-top: 20px;
@@ -87,23 +85,60 @@
       background: #fff;
       border-radius: 8px;
     }
-    .download-link {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
+    .result-section h2 {
+      color: #1a237e;
     }
-    .download-link:hover { color: var(--secondary); }
+    .result-section ul {
+      text-align: left;
+      list-style-type: none;
+      padding: 0;
+    }
+    .result-section ul li {
+      margin: 8px 0;
+      color:#1a237e;
+    }
+    a.download-link {
+      text-decoration: none;
+      color: #1a237e;
+      font-weight: bold;
+    }
+    a.download-link:hover {
+      text-decoration: underline;
+    }
+    .option-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .active-option {
+      background:#1a237e;
+    }
   </style>
 </head>
 <body>
   <div class="converter-container">
     <h1>URL Image Converter</h1>
-    <form action="/convert_url_image" method="post">
+    
+    <div class="option-buttons">
+      <button class="btn" onclick="showForm('single')" id="singleBtn">Single Image</button>
+      <button class="btn" onclick="showForm('multiple')" id="multipleBtn">Extract from Webpage</button>
+    </div>
+
+    <form id="singleImageForm" action="/convert_url_image" method="post">
       <div class="form-group">
-        <label for="image-url">Enter Image URL</label>
-        <input type="url" id="image-url" name="image_url" placeholder="Enter image URL" required>
+        <label for="single-image-url">Enter Single Image URL</label>
+        <input type="url" id="single-image-url" name="image_url" placeholder="Enter direct image URL" required>
       </div>
       <button class="btn" type="submit">Convert to WebP</button>
+    </form>
+
+    <form id="extractImagesForm" action="/extract-images" method="post" style="display: none;">
+      <div class="form-group">
+        <label for="webpage-url">Enter Webpage URL</label>
+        <input type="url" id="webpage-url" name="url" placeholder="Enter webpage URL to extract images" required>
+      </div>
+      <button class="btn" type="submit">Extract Images</button>
     </form>
 
     {% if converted_image %}
@@ -114,5 +149,29 @@
     </div>
     {% endif %}
   </div>
+
+  <script>
+    function showForm(type) {
+      const singleForm = document.getElementById('singleImageForm');
+      const extractForm = document.getElementById('extractImagesForm');
+      const singleBtn = document.getElementById('singleBtn');
+      const multipleBtn = document.getElementById('multipleBtn');
+
+      if (type === 'single') {
+        singleForm.style.display = 'block';
+        extractForm.style.display = 'none';
+        singleBtn.classList.add('active-option');
+        multipleBtn.classList.remove('active-option');
+      } else {
+        singleForm.style.display = 'none';
+        extractForm.style.display = 'block';
+        singleBtn.classList.remove('active-option');
+        multipleBtn.classList.add('active-option');
+      }
+    }
+
+    // Set single image as default view
+    window.onload = () => showForm('single');
+  </script>
 </body>
 </html>

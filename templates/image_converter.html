@@ -151,6 +151,32 @@
             </button>
         </form>
 
+        {% if size_info %}
+            <h2>Conversion Results</h2>
+            <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+                <thead>
+                    <tr style="background:#f0f0f0;">
+                        <th style="padding:8px;border:1px solid #ccc;">Original File</th>
+                        <th style="padding:8px;border:1px solid #ccc;">Original Size (KB)</th>
+                        <th style="padding:8px;border:1px solid #ccc;">Converted Size (KB)</th>
+                        <th style="padding:8px;border:1px solid #ccc;">Reduction (%)</th>
+                        <th style="padding:8px;border:1px solid #ccc;">Download</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for info in size_info %}
+                    <tr>
+                        <td style="padding:8px;border:1px solid #ccc;">{{ info.original }}</td>
+                        <td style="padding:8px;border:1px solid #ccc;">{{ info.orig_size }}</td>
+                        <td style="padding:8px;border:1px solid #ccc;">{{ info.conv_size }}</td>
+                        <td style="padding:8px;border:1px solid #ccc;">{{ info.percent }}%</td>
+                        <td style="padding:8px;border:1px solid #ccc;"><a href="{{ url_for('static', filename=info.converted) }}" download>Download</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        
         {% if converted_files %}
         <div class="converted-files">
             <h2>Converted Files</h2>

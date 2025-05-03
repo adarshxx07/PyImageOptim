@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>URL Image Converter</title>
+  <title>URL Image Converter - PyImageOptim</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/animated.css') }}">
   <style>
     :root {
       --primary: #4b8ef1;
@@ -10,133 +11,126 @@
       --trans: .3s;
     }
     body {
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       text-align: center;
       margin: 0;
       padding: 20px;
-      background: linear-gradient(#0009, #0009),
-                url("{{ url_for('static', filename='images/service-bg.jpg') }}") center/cover;
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                url("{{ url_for('static', filename='images/slider-dec.png') }}"),
+                url("{{ url_for('static', filename='images/service-bg.jpg') }}");
+      background-position: center center, left center, center center;
+      background-size: cover, contain, cover;
+      background-repeat: no-repeat, no-repeat, no-repeat;
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .converter-container {
-      background: transparent;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      max-width: 550px;
-      margin: 40px auto;
-      padding: 30px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 25px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 600px;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
     }
-    .converter-container h1 {
-      margin-bottom: 20px;
-      color:#1a237e;
+    .converter-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
     }
     h1 {
-      margin-bottom: 25px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      font-size: 2rem;
+      margin-bottom: 1.8rem;
     }
-    .form-group { margin-bottom: 20px; }
+    .form-group {
+      margin-bottom: 1.4rem;
+      position: relative;
+    }
     label {
-      font-weight: bold;
-      color: #1a237e;
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 0.8rem;
       color: #333;
       font-weight: 500;
+      text-align: left;
     }
     input[type="url"] {
       width: 100%;
-      padding: 12px;
-      border: 2px dashed #1a237e;
-      border-radius: 8px;
-      box-sizing: border-box;
-      transition: var(--trans);
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #e0e0e0;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.4);
     }
-    input[type="url"]:hover {
-      border-color: #1a237e;
+    input[type="url"]:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(75, 142, 241, 0.15);
     }
-    .container {
-        max-width: 700px;
-        margin: 50px auto;
-        background: rgba(255, 255, 255, 0.2); /* Match other pages */
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    .btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .btn, button.btn {
-        background: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        padding: 10px 24px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    .btn:hover, button.btn:hover {
-        background: #0056b3;
+    .btn:hover {
+      background: linear-gradient(135deg, #1f5ec7, #6340c5);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(75, 142, 241, 0.3);
     }
     .result-section {
-      margin-top: 20px;
-      padding: 15px;
-      background: #fff;
-      border-radius: 8px;
+      margin-top: 1.5rem;
+      padding: 1.2rem;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 12px;
+      border: 1px solid rgba(75, 142, 241, 0.2);
     }
-    .result-section h2 {
-      color: #1a237e;
-    }
-    .result-section ul {
-      text-align: left;
-      list-style-type: none;
-      padding: 0;
-    }
-    .result-section ul li {
-      margin: 8px 0;
-      color:#1a237e;
-    }
-    a.download-link {
+    .download-link {
+      display: inline-block;
       text-decoration: none;
-      color: #1a237e;
-      font-weight: bold;
+      color: var(--primary);
+      font-weight: 600;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      background: rgba(75, 142, 241, 0.1);
+      transition: all 0.3s ease;
     }
-    a.download-link:hover {
-      text-decoration: underline;
-    }
-    .option-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-    .active-option {
-      background:#1a237e;
+    .download-link:hover {
+      background: rgba(75, 142, 241, 0.2);
+      transform: translateY(-1px);
     }
   </style>
 </head>
 <body>
-  <div class="converter-container">
+  <div class="converter-container animated fadeInDown">
     <h1>URL Image Converter</h1>
-    
-    <div class="option-buttons">
-      <button class="btn" onclick="showForm('single')" id="singleBtn">Single Image</button>
-      <button class="btn" onclick="showForm('multiple')" id="multipleBtn">Extract from Webpage</button>
-    </div>
-
-    <form id="singleImageForm" action="/convert_url_image" method="post">
-      <div class="form-group">
-        <label for="single-image-url">Enter Single Image URL</label>
-        <input type="url" id="single-image-url" name="image_url" placeholder="Enter direct image URL" required>
-      </div>
-      <button class="btn" type="submit">Convert to WebP</button>
-    </form>
-
-    <form id="extractImagesForm" action="/extract-images" method="post" style="display: none;">
+    <form id="extractImagesForm" action="/extract-images" method="post">
       <div class="form-group">
         <label for="webpage-url">Enter Webpage URL</label>
-        <input type="url" id="webpage-url" name="url" placeholder="Enter webpage URL to extract images" required>
+        <input type="url" id="webpage-url" name="url" 
+               placeholder="https://example.com" required>
       </div>
       <button class="btn" type="submit">Extract Images</button>
     </form>
@@ -144,34 +138,13 @@
     {% if converted_image %}
     <div class="result-section">
       <a class="download-link" href="{{ url_for('static', filename='converted/' + converted_image) }}" download>
-        Download Converted Image
+        <i class="fas fa-download"></i> Download Converted Image
       </a>
     </div>
     {% endif %}
   </div>
-
-  <script>
-    function showForm(type) {
-      const singleForm = document.getElementById('singleImageForm');
-      const extractForm = document.getElementById('extractImagesForm');
-      const singleBtn = document.getElementById('singleBtn');
-      const multipleBtn = document.getElementById('multipleBtn');
-
-      if (type === 'single') {
-        singleForm.style.display = 'block';
-        extractForm.style.display = 'none';
-        singleBtn.classList.add('active-option');
-        multipleBtn.classList.remove('active-option');
-      } else {
-        singleForm.style.display = 'none';
-        extractForm.style.display = 'block';
-        singleBtn.classList.remove('active-option');
-        multipleBtn.classList.add('active-option');
-      }
-    }
-
-    // Set single image as default view
-    window.onload = () => showForm('single');
-  </script>
+  
+  <!-- Add Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
 </html>

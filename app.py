@@ -64,24 +64,48 @@ with app.app_context():
 def index():
     return render_template('index.html')
 
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        
+        # Password validation
+        if not all([username, email, password]):
+            flash('All fields are required', 'danger')
+            return render_template('login.html')
+            
+        # Password validation rules
+        if len(password) < 8:
+            flash('Password must be at least 8 characters long', 'danger')
+            return render_template('login.html')
+        if not any(char.isdigit() for char in password):
+            flash('Password must contain at least one digit', 'danger')
+            return render_template('login.html')
+        if not any(char.isalpha() for char in password):
+            flash('Password must contain at least one letter', 'danger')
+            return render_template('login.html')
+        if not any(char in '!@#$%^&*()_+' for char in password):
+            flash('Password must contain at least one special character', 'danger')
+            return render_template('login.html')
+        if not any(char.isupper() for char in password):
+            flash('Password must contain at least one uppercase letter', 'danger')
+            return render_template('login.html')
+
+        # Check if user already exists
         user = User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first()
         if user:
-                flash('Username or email already exists', 'danger')
-                return render_template('login.html')
-
+            flash('Username or email already exists', 'danger')
+            return render_template('login.html')
         else:
             new_user = User(username=username, email=email, password=password)
             db.session.add(new_user)
             db.session.commit()
             flash('Signup successful', 'success')
             return redirect(url_for('login'))
+            
     return render_template('login.html')
     
 

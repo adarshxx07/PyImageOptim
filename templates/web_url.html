@@ -14,7 +14,7 @@
       font-family: 'Roboto', sans-serif;
       text-align: center;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
                 url("{{ url_for('static', filename='images/slider-dec.png') }}"),
                 url("{{ url_for('static', filename='images/service-bg.jpg') }}");
@@ -22,21 +22,67 @@
       background-size: cover, contain, cover;
       background-repeat: no-repeat, no-repeat, no-repeat;
       min-height: 100vh;
+      height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
+
+    /* Navigation Bar Styles */
+    .nav-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 24px;
+      background: transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .back-link:hover {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      transform: translateY(-2px);
+    }
+
+    .page-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
     .converter-container {
       background: rgba(255, 255, 255, 0.6);
-      border-radius: 25px;
+      border-radius: 20px;
       box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-      width: 100%;
-      max-width: 600px;
-      padding: 2.5rem;
+      width: 90%;
+      max-width: 450px;
+      padding: 1.5rem;
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
+      max-height: calc(100vh - 120px);
     }
     .converter-container::before {
       content: '';
@@ -48,31 +94,32 @@
       background: linear-gradient(to right, var(--primary), var(--secondary));
     }
     h1 {
-      font-size: 2.2rem;
+      font-size: 1.8rem;
       font-weight: 700;
       background: linear-gradient(to right, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.2rem;
     }
     .form-group {
-      margin-bottom: 1.4rem;
+      margin-bottom: 1rem;
       position: relative;
     }
     label {
       display: block;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.5rem;
       color: #333;
       font-weight: 500;
       text-align: left;
+      font-size: 0.9rem;
     }
     input[type="url"] {
       width: 100%;
-      padding: 1rem 1.2rem;
+      padding: 0.8rem 1rem;
       border-radius: 12px;
       border: 2px solid #e0e0e0;
-      font-size: 1rem;
+      font-size: 0.9rem;
       transition: all 0.3s ease;
       background: rgba(255, 255, 255, 0.4);
     }
@@ -83,12 +130,12 @@
     }
     .btn {
       width: 100%;
-      padding: 1rem;
+      padding: 0.8rem;
       border: none;
       border-radius: 12px;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: #fff;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -101,8 +148,8 @@
       box-shadow: 0 5px 15px rgba(75, 142, 241, 0.3);
     }
     .result-section {
-      margin-top: 1.5rem;
-      padding: 1.2rem;
+      margin-top: 1rem;
+      padding: 1rem;
       background: rgba(255, 255, 255, 0.4);
       border-radius: 12px;
       border: 1px solid rgba(75, 142, 241, 0.2);
@@ -112,7 +159,8 @@
       text-decoration: none;
       color: var(--primary);
       font-weight: 600;
-      padding: 0.8rem 1.5rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
       border-radius: 8px;
       background: rgba(75, 142, 241, 0.1);
       transition: all 0.3s ease;
@@ -124,6 +172,15 @@
   </style>
 </head>
 <body>
+  <!-- Add Navigation Bar -->
+  <div class="nav-bar">
+    <a href="{{ url_for('index') }}#services" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      Back to Services
+    </a>
+    <div class="page-title">URL Image Converter</div>
+  </div>
+
   <div class="converter-container animated fadeInDown">
     <h1>URL Image Converter</h1>
     <form id="extractImagesForm" action="/extract-images" method="post">

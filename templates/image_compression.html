@@ -17,6 +17,7 @@
       background-size: cover, contain, cover;
       background-repeat: no-repeat, no-repeat, no-repeat;
       min-height: 100vh;
+      padding-top: 80px !important;
     }
     .compress-container {
       background: rgba(255,255,255,0.4);
@@ -173,9 +174,56 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
+
+    /* Navigation Bar Styles */
+    .nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 15px 30px;
+        background: transparent;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .back-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .back-link:hover {
+        background: linear-gradient(105deg, rgba(91,104,235,1) 0%, rgba(40,225,253,1) 100%);
+        transform: translateY(-2px);
+    }
+
+    .page-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 <body>
+  <div class="nav-bar">
+    <a class="back-link" href="/">
+      <span>&larr;</span> Back
+    </a>
+    <div class="page-title">Image Compressor</div>
+  </div>
   <div class="compress-container">
     <h1>Image Compressor</h1>
     <form action="/image_compression" method="post" enctype="multipart/form-data">

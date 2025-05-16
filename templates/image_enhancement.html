@@ -17,14 +17,20 @@
       background-repeat: no-repeat, no-repeat, no-repeat;
       min-height: 100vh;
       padding: 10px 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding-top: 80px;
     }
     .enhance-container {
       background: rgba(255, 255, 255, 0.4);
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      max-width: 1000px;
-      margin: 10px auto;
-      padding: 20px;
+      max-width: 800px;
+      width: 90%;
+      margin: 20px auto;
+      padding: 25px;
       position: relative;
       border: 1px solid rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
@@ -40,36 +46,38 @@
     }
     .header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     .header h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
+      font-size: 1.4rem;
+      font-weight: 900; /* Changed from 700 to 900 for bolder text */
       background: linear-gradient(to right, #4b8ef1, #7d56e6);
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Added text shadow for emphasis */
+      letter-spacing: 0.5px; /* Added letter spacing for better readability */
     }
     .header p {
       color: #2a2a2a;
-      font-size: 1.1em;
+      font-size: 1em;
     }
     .workspace {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-top: 15px;
+      gap: 12px;
+      margin-top: 12px;
     }
     .controls {
       background: rgba(255, 255, 255, 0.4);
-      padding: 15px;
+      padding: 12px;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
     .preview-section {
       background: rgba(255, 255, 255, 0.4);
-      padding: 15px;
+      padding: 12px;
       border-radius: 15px;
       text-align: center;
     }
@@ -214,9 +222,62 @@
       -webkit-text-fill-color: transparent;
       margin-top: 5px;
     }
+    @media (max-width: 768px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+      
+      .enhance-container {
+        width: 95%;
+        padding: 20px;
+      }
+    }
+    .nav-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 15px 30px;
+      background: transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: none;
+    }
+
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .page-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 <body>
+  <div class="nav-bar">
+    <a href="{{ url_for('index') }}#services" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      Back to Services
+    </a>
+    <div class="page-title">Image Enhancement</div>
+  </div>
+
   <div class="enhance-container">
     <div class="header">
       <h1>Image Enhancement</h1>

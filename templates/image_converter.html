@@ -22,21 +22,72 @@
             background-position: center center, left center, center center;
             background-size: cover, contain, cover;
             background-repeat: no-repeat, no-repeat, no-repeat;
-            min-height: 100vh;
-            padding: 15px;
+            height: 100vh;
             margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 20px;
+            background: transparent;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: none;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-link:hover {
+            background: var(--gradient);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .page-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .container {
+            width: 90%;
+            max-width: 450px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            padding: 20px;
+            margin: 0;
             background: var(--bg-transparent);
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            max-width: 800px;
-            margin: 15px auto;
-            padding: 25px;
             position: relative;
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            scrollbar-width: thin;
         }
 
         .container::before {
@@ -50,19 +101,33 @@
             border-radius: 20px 20px 0 0;
         }
 
+        .container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: rgba(75,142,241,0.5);
+            border-radius: 3px;
+        }
+
         h1 {
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             background: var(--gradient);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         label {
@@ -73,12 +138,12 @@
         }
 
         select, input[type="url"], input[type="range"] {
-            display: none; /* Remove these input styles as they're no longer needed */
+            display: none;
         }
 
         .file-upload-label {
             display: block;
-            padding: 15px;
+            padding: 12px;
             background: rgba(75, 142, 241, 0.1);
             border: 2px dashed var(--primary);
             border-radius: 10px;
@@ -87,38 +152,60 @@
             transition: .3s;
         }
 
+        .file-upload-label p {
+            margin: 8px 0;
+        }
+
         .btn {
             background: var(--gradient);
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 10px 20px;
             border-radius: 12px;
             font-weight: 600;
             width: 100%;
             cursor: pointer;
+            margin-top: 10px;
             transition: .3s;
         }
 
+        table {
+            font-size: 0.85rem;
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 6px !important;
+            border: 1px solid #ccc;
+        }
+
         .converted-files {
-            margin-top: 25px;
-            padding-top: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
             border-top: 2px solid #e0e0e0;
+        }
+
+        .converted-files h2 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
         }
 
         .converted-files a {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px;
+            padding: 8px;
             background: white;
             border: 2px solid var(--primary);
             border-radius: 8px;
             color: var(--primary);
             text-decoration: none;
+            font-size: 0.9rem;
             transition: .3s;
         }
 
-        /* Hover states */
         .file-upload-label:hover, .btn:hover, .converted-files a:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(75, 142, 241, 0.3);
@@ -134,6 +221,14 @@
     </style>
 </head>
 <body>
+    <div class="nav-bar">
+        <a href="{{ url_for('index') }}#services" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Services
+        </a>
+        <div class="page-title">Image Converter</div>
+    </div>
+
     <div class="container">
         <h1>Image Converter</h1>
         <form method="POST" enctype="multipart/form-data">
@@ -153,24 +248,24 @@
 
         {% if size_info %}
             <h2>Conversion Results</h2>
-            <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+            <table>
                 <thead>
                     <tr style="background:#f0f0f0;">
-                        <th style="padding:8px;border:1px solid #ccc;">Original File</th>
-                        <th style="padding:8px;border:1px solid #ccc;">Original Size (KB)</th>
-                        <th style="padding:8px;border:1px solid #ccc;">Converted Size (KB)</th>
-                        <th style="padding:8px;border:1px solid #ccc;">Reduction (%)</th>
-                        <th style="padding:8px;border:1px solid #ccc;">Download</th>
+                        <th>Original File</th>
+                        <th>Original Size (KB)</th>
+                        <th>Converted Size (KB)</th>
+                        <th>Reduction (%)</th>
+                        <th>Download</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for info in size_info %}
                     <tr>
-                        <td style="padding:8px;border:1px solid #ccc;">{{ info.original }}</td>
-                        <td style="padding:8px;border:1px solid #ccc;">{{ info.orig_size }}</td>
-                        <td style="padding:8px;border:1px solid #ccc;">{{ info.conv_size }}</td>
-                        <td style="padding:8px;border:1px solid #ccc;">{{ info.percent }}%</td>
-                        <td style="padding:8px;border:1px solid #ccc;"><a href="{{ url_for('static', filename=info.converted) }}" download>Download</a></td>
+                        <td>{{ info.original }}</td>
+                        <td>{{ info.orig_size }}</td>
+                        <td>{{ info.conv_size }}</td>
+                        <td>{{ info.percent }}%</td>
+                        <td><a href="{{ url_for('static', filename=info.converted) }}" download>Download</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -195,7 +290,6 @@
     </div>
 
     <script>
-        // Only keep drag and drop functionality
         const dropZone = document.querySelector('.file-upload-label');
         const fileInput = document.getElementById('images');
 

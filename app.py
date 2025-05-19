@@ -25,7 +25,7 @@ app.secret_key = 'supersecretmre'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 UPLOAD_FOLDER = 'static/uploads'
-CONVERTED_FOLDER = 'converted'
+CONVERTED_FOLDER = 'static/converted'
 COMPRESSED_FOLDER = 'static/compressed'
 ENHANCED_FOLDER = 'static/enhanced'  # Add enhanced folder
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
